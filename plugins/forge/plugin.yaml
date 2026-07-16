@@ -1,0 +1,4 @@
+name: forge
+version: "1.0.0"
+description: "Self-distillation: mines your own completed Hermes sessions for high-quality tool-using conversations, scores them with a rubric LLM pass, dedupes them, and exports Hermes-format ShareGPT trajectories (JSONL) for fine-tuning or few-shot libraries. Your daily usage becomes a personal dataset factory."
+author: "ouroboros-pack"

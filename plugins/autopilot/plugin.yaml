@@ -1,0 +1,6 @@
+name: autopilot
+version: "1.0.0"
+description: "Watches what you repeatedly ask for (across CLI and every messaging platform), detects recurring intents with a structured LLM pass over the local session DB, and turns them into one-tap cron automations. /autopilot list shows suggestions; /autopilot approve <id> creates a real scheduled job. The 'you asked this 5 times — want it automated?' loop."
+author: "ouroboros-pack"
+hooks:
+  - on_session_end

@@ -1,0 +1,4 @@
+name: council
+version: "1.0.0"
+description: "Adversarial delegation: fans a hard question out to 2-5 parallel tool-using subagents with distinct lenses (analyst / skeptic / pragmatist / contrarian / user-advocate), then runs a host-owned judge pass (ctx.llm structured output) that scores each position, synthesizes the answer, and preserves the dissent. Modes: deliberate, redteam, race."
+author: "ouroboros-pack"

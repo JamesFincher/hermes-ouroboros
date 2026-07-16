@@ -1,0 +1,4 @@
+name: ouroboros
+version: "1.0.0"
+description: "The keystone of the Ouroboros pack: /ouroboros renders the self-improvement flywheel — live status of echo (remember), archive (preserve), seatbelt (trust), council (decide), autopilot (automate) and forge (learn) in one glance, plus the single most valuable next action to keep the loop spinning."
+author: "ouroboros-pack"
