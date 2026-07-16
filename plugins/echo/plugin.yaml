@@ -1,0 +1,7 @@
+name: echo
+version: "1.0.0"
+description: "Proactive cross-session recall: every turn, Echo searches your own past sessions (local SQLite FTS5 — no external service, no embeddings) and injects the 2-3 most relevant excerpts into the conversation before the model sees your message. Plus an explicit echo_recall tool and /echo controls."
+author: "ouroboros-pack"
+hooks:
+  - pre_llm_call
+  - on_session_start

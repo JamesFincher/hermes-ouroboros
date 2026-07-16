@@ -1,0 +1,7 @@
+name: seatbelt
+version: "1.0.0"
+description: "Adaptive tool-policy engine: declarative allow/block/approve rules, per-tool rate limits, session call budgets, and a tamper-evident SQLite audit trail over EVERY tool call. Lets you run /yolo with a safety net."
+author: "ouroboros-pack"
+hooks:
+  - pre_tool_call
+  - post_tool_call

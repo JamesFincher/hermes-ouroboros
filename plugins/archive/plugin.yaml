@@ -1,0 +1,4 @@
+name: archive
+version: "1.0.0"
+description: "Lossless context engine. Replaces the built-in compressor's 'summarize-and-discard' model: every message window that leaves the context window is first sealed into a local FTS5-indexed archive, and the agent gets archive_search / archive_expand tools to pull anything back on demand. Activate with `context.engine: archive` in config.yaml."
+author: "ouroboros-pack"

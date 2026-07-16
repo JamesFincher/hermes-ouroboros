@@ -1,0 +1,63 @@
+# Seatbelt default rules.
+# Copied to ~/.hermes/seatbelt/rules.yaml on first run — edit that copy.
+# Reload without restarting:  /seatbelt reload
+#
+# Rule fields:
+#   name        unique id
+#   tools       list of fnmatch globs matched against the tool name
+#   action      block | approve | audit
+#                 block   -> tool call is vetoed; `message` becomes the tool result
+#                 approve -> escalates to the human approval gate ([o]nce/[s]ession/[a]lways/[d]eny)
+#                 audit   -> allowed, but recorded with decision=flagged in the audit log
+#   message     shown to the model (block) or the human (approve)
+#   rule_key    optional allowlist grain for [a]lways approvals (default: seatbelt:<rule name>)
+#   args_regex  optional regex matched against json.dumps(tool_args)
+#   rate        optional {count: N, per_seconds: S} — fires when exceeded within the window
+#   budget      optional {max_calls: N} — fires when the rule matched >N times this session
+#   enabled     false to disable without deleting
+
+rules:
+  - name: protect-credential-dirs
+    tools: [write_file, patch]
+    args_regex: '\.(ssh|aws|gnupg|config/gcloud)[/"]'
+    action: block
+    message: "Seatbelt: writes into credential directories (~/.ssh, ~/.aws, ~/.gnupg, gcloud config) are blocked. Ask the human to do this by hand."
+
+  - name: env-file-reads-need-approval
+    tools: [read_file]
+    args_regex: '(^|[/\\])\.env(\.|$|"|/)'
+    action: approve
+    message: "Seatbelt: the agent wants to read an .env file. Approve only if you expect secret values to enter the conversation."
+    rule_key: "seatbelt:env-read"
+
+  - name: destructive-git-needs-approval
+    tools: [terminal, shell_exec, execute_code]
+    args_regex: '(git\s+push\s+(--force|-f)\b|git\s+reset\s+--hard|rm\s+-[a-zA-Z]*r[a-zA-Z]*f|dd\s+if=|mkfs\.)'
+    action: approve
+    message: "Seatbelt: potentially destructive shell operation. Review the exact command before approving."
+    rule_key: "seatbelt:destructive-shell"
+
+  - name: web-search-hourly-rate
+    tools: [web_search]
+    rate: {count: 30, per_seconds: 3600}
+    action: approve
+    message: "Seatbelt: web_search rate budget exceeded (30/hour). Approve to keep searching — or tell the agent to work with what it has."
+    rule_key: "seatbelt:web-hourly"
+
+  - name: browser-session-rate
+    tools: ["browser_*"]
+    rate: {count: 120, per_seconds: 3600}
+    action: approve
+    message: "Seatbelt: browser automation rate budget exceeded (120 calls/hour)."
+    rule_key: "seatbelt:browser-hourly"
+
+  - name: runaway-loop-guard
+    tools: ["*"]
+    budget: {max_calls: 500}
+    action: approve
+    message: "Seatbelt: this session has made over 500 tool calls. Possible runaway loop — approve to continue."
+    rule_key: "seatbelt:session-budget"
+
+  - name: audit-code-execution
+    tools: [execute_code]
+    action: audit
